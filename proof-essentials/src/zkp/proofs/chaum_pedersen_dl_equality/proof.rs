@@ -15,8 +15,8 @@ pub struct Proof<C>
 where
     C: ProjectiveCurve,
 {
-    pub(crate) a: C,
-    pub(crate) b: C,
+    pub(crate) a: C::Affine,
+    pub(crate) b: C::Affine,
     pub(crate) r: C::ScalarField,
 }
 
@@ -39,14 +39,14 @@ impl<C: ProjectiveCurve> Proof<C> {
         let c = C::ScalarField::rand(fs_rng);
 
         // g * r ==? a + x*c
-        if parameters.g.mul(self.r) != self.a + statement.0.mul(c) {
+        if parameters.g.mul(self.r) != self.a.into_projective() + statement.0.mul(c) {
             return Err(CryptoError::ProofVerificationError(String::from(
                 "Chaum-Pedersen",
             )));
         }
 
         // h * r ==? b + y*c
-        if parameters.h.mul(self.r) != self.b + statement.1.mul(c) {
+        if parameters.h.mul(self.r) != self.b.into_projective() + statement.1.mul(c) {
             return Err(CryptoError::ProofVerificationError(String::from(
                 "Chaum-Pedersen",
             )));

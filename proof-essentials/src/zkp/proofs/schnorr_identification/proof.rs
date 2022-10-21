@@ -14,7 +14,7 @@ pub struct Proof<C>
 where
     C: ProjectiveCurve,
 {
-    pub random_commit: C,
+    pub random_commit: C::Affine,
     pub opening: C::ScalarField,
 }
 
@@ -34,7 +34,7 @@ impl<C: ProjectiveCurve> Proof<C> {
 
         let c = C::ScalarField::rand(fs_rng);
 
-        if pp.mul(self.opening.into_repr()) + statement.mul(c.into_repr()) != self.random_commit {
+        if pp.mul(self.opening.into_repr()) + statement.mul(c) != self.random_commit.into_projective() {
             return Err(CryptoError::ProofVerificationError(String::from(
                 "Schnorr Identification",
             )));

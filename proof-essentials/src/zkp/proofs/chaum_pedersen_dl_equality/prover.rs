@@ -41,8 +41,8 @@ where
         );
 
         let omega = C::ScalarField::rand(rng);
-        let a = parameters.g.mul(omega.into_repr());
-        let b = parameters.h.mul(omega.into_repr());
+        let a = parameters.g.mul(omega.into_repr()).into_affine();
+        let b = parameters.h.mul(omega.into_repr()).into_affine();
 
         fs_rng.absorb(&to_bytes![a, b]?);
 
